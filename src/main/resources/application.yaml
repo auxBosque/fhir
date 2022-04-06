@@ -1,7 +1,7 @@
 spring:
   main:
     allow-circular-references: true
-    web-application-type: none
+    # web-application-type: none
     #allow-bean-definition-overriding: true
   flyway:
     enabled: false
