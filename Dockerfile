@@ -24,11 +24,11 @@ RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
 
 USER root
 RUN mkdir -p /target && chown -R 1001:1001 target
-USER 1001:1001
+USER root
 
-COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
-COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
-COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
+COPY --chown=root:root catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
+COPY --chown=root:root server.xml /opt/bitnami/tomcat/conf/server.xml
+COPY --from=build-hapi --chown=root:root /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
 
 ENV ALLOW_EMPTY_PASSWORD=yes
 
