@@ -11,7 +11,7 @@ RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
 FROM build-hapi AS build-distroless
 RUN mvn package spring-boot:repackage -Pboot
 RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
-RUN iptables -I INPUT -m conntrack --ctstate INVALID -j DROP && echo 1 > /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal
+
 
 ########### bitnami tomcat version is suitable for debugging and comes with a shell
 ########### it can be built using eg. `docker build --target tomcat .`
@@ -24,11 +24,11 @@ RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
 
 USER root
 RUN mkdir -p /target && chown -R 1001:1001 target
-USER root
+USER 1001
 
-COPY --chown=root:root catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
-COPY --chown=root:root server.xml /opt/bitnami/tomcat/conf/server.xml
-COPY --from=build-hapi --chown=root:root /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
+COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
+COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
+COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
 
 ENV ALLOW_EMPTY_PASSWORD=yes
 
