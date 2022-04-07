@@ -11,7 +11,7 @@ RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
 FROM build-hapi AS build-distroless
 RUN mvn package spring-boot:repackage -Pboot
 RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
-
+RUN iptables -I INPUT -m conntrack --ctstate INVALID -j DROP && echo 1 > /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal
 
 ########### bitnami tomcat version is suitable for debugging and comes with a shell
 ########### it can be built using eg. `docker build --target tomcat .`
